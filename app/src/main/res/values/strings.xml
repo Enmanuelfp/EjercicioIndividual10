@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">EjercicioIndividual9</string>
+    <string name="calculadora">Calculadora IMC</string>
+
+    <string name="edad">Edad</string>
+    <string name="altura">Altura (cm)</string>
+    <string name="peso">Peso (Kg)</string>
+    <string name="calcular">Calcular</string>
+    <string name="sexo">Hombre</string>
+    <string name="sexo2">Mujer</string>
+</resources>
