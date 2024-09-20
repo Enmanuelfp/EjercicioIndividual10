@@ -53,7 +53,7 @@ fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
                 viewModel.Calculo((viewModel.peso.value), viewModel.altura.value).toString()
         }
         Spacio()
-        TexResult(viewModel.result.value, viewModel.hasCalculated.value)
+        TexResult(viewModel)
     }
 }
 
@@ -168,23 +168,20 @@ fun TexAltura(altura: String, onAlturaChange: (String) -> Unit) {
 
 
 @Composable
-fun TexResult(result: String, hasCalculated: Boolean) {
-    var alert = hasCalculated
-    if (alert) {
-        if (result.isBlank()) {
-            // Muestra alerta si la cadena está vacía
-            AlertError(
-                "Error",
-                "Campo Vacío",
-                "Aceptar",
-                onConfirmClick = { alert = false },
-                onDismissClick = { alert = false }
-            )
-        }
+fun TexResult(viewModel: ImcViewModel) {
+    val hasCalculated = viewModel.hasCalculated.value
+
+    if (hasCalculated) {
+        AlertError(
+            "ERROR",
+            "Todos los campos son requeridos para realizar el calculo",
+            "Entendido",
+            onConfirmClick = { viewModel.hasCalculated.value = false },
+            onDismissClick = { viewModel.hasCalculated.value = false }
+        )
     } else {
-        // Muestra el resultado si es válido
         Text(
-            text = result,
+            text = viewModel.result.value,
             fontSize = 40.sp,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
@@ -194,6 +191,7 @@ fun TexResult(result: String, hasCalculated: Boolean) {
         )
     }
 }
+
 
 
 

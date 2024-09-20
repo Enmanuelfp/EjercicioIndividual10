@@ -20,9 +20,16 @@ class ImcViewModel: ViewModel(){
     fun Calculo(peso: String, altura: String): Float {
         val pesoD = peso.toDoubleOrNull() ?: 0.0
         val alturaD = altura.toDoubleOrNull() ?: 0.0
-        var resultimc =  (pesoD / (alturaD * alturaD)*10000).toFloat()
-        hasCalculated.value = true
-        return kotlin.math.round(resultimc)
+        if (peso.isEmpty() || altura.isEmpty()) {
+            hasCalculated.value = true
+            _result.value = "Valores inválidos"
+            return 0.0f
+        }
+
+        val resultimc = (pesoD / (alturaD * alturaD) * 10000).toFloat()
+        _result.value = kotlin.math.round(resultimc).toString()
+        return resultimc
     }
+
 
 }
