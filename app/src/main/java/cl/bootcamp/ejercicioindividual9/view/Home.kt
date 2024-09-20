@@ -2,11 +2,10 @@ package cl.bootcamp.ejercicioindividual9.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -16,23 +15,21 @@ import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cl.bootcamp.ejercicioindividual9.R
+import cl.bootcamp.ejercicioindividual9.component.AlertError
+import cl.bootcamp.ejercicioindividual9.component.Spacio
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
-
 
 @Composable
 fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
@@ -52,10 +49,11 @@ fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
         Spacio()
         TexAltura(viewModel.altura.value) { viewModel.altura.value = it }
         BtnCalcular {
-            viewModel.result.value = viewModel.Calculo((viewModel.peso.value), viewModel.altura.value).toString()
+            viewModel.result.value =
+                viewModel.Calculo((viewModel.peso.value), viewModel.altura.value).toString()
         }
         Spacio()
-        TexResult(viewModel.result.value)
+        TexResult(viewModel.result.value, viewModel.hasCalculated.value)
     }
 }
 
@@ -139,7 +137,8 @@ fun TexEdad(edad: String, onEdadChange: (String) -> Unit) {
     OutlinedTextField(
         value = edad,
         onValueChange = onEdadChange,
-        placeholder = { Text(text = stringResource(id = R.string.edad)) }
+        placeholder = { Text(text = stringResource(id = R.string.edad)) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
 
@@ -149,7 +148,9 @@ fun TexPeso(peso: String, onPesoChange: (String) -> Unit) {
     OutlinedTextField(
         value = peso,
         onValueChange = onPesoChange,
-        placeholder = { Text(text = stringResource(id = R.string.peso)) }
+        placeholder = { Text(text = stringResource(id = R.string.peso)) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+
     )
 }
 
@@ -160,25 +161,43 @@ fun TexAltura(altura: String, onAlturaChange: (String) -> Unit) {
     OutlinedTextField(
         value = altura,
         onValueChange = onAlturaChange,
-        placeholder = { Text(text = stringResource(id = R.string.altura)) }
+        placeholder = { Text(text = stringResource(id = R.string.altura)) },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
     )
 }
 
-@Composable
-fun Spacio() {
-    Spacer(modifier = Modifier.height(20.dp))
-}
 
 @Composable
-fun TexResult(result: String) {
-    Text(
-        text = result,
-        fontSize = 40.sp,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(20.dp),
-        textAlign = TextAlign.Center
-    )
+fun TexResult(result: String, hasCalculated: Boolean) {
+    var alert = hasCalculated
+    if (alert) {
+        if (result.isBlank()) {
+            // Muestra alerta si la cadena está vacía
+            AlertError(
+                "Error",
+                "Campo Vacío",
+                "Aceptar",
+                onConfirmClick = { alert = false },
+                onDismissClick = { alert = false }
+            )
+        }
+    } else {
+        // Muestra el resultado si es válido
+        Text(
+            text = result,
+            fontSize = 40.sp,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            textAlign = TextAlign.Center
+        )
+    }
 }
+
+
+
+
+
+
 

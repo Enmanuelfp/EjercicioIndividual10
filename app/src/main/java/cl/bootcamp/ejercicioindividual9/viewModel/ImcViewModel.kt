@@ -15,11 +15,13 @@ class ImcViewModel: ViewModel(){
     var altura : MutableState<String> = _altura
     var edad : MutableState<String> = _edad
     var result : MutableState<String> = _result
+    var hasCalculated = mutableStateOf(false)
 
     fun Calculo(peso: String, altura: String): Float {
         val pesoD = peso.toDoubleOrNull() ?: 0.0
         val alturaD = altura.toDoubleOrNull() ?: 0.0
         var resultimc =  (pesoD / (alturaD * alturaD)*10000).toFloat()
+        hasCalculated.value = true
         return kotlin.math.round(resultimc)
     }
 
