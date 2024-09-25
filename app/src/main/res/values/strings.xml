@@ -8,4 +8,13 @@
     <string name="calcular">Calcular</string>
     <string name="sexo">Hombre</string>
     <string name="sexo2">Mujer</string>
+    <string name="listaPacientes">Lista de pacientes</string>
+    <string name="calcularimc">Calcular Imc</string>
+    <string name="nombre">Nombre</string>
+    <string name="agregarPaciente">Agregar nuevo paciente</string>
+    <string name="cancelar">Cancelar</string>
+    <string name="error">ERROR</string>
+    <string name="camposrequeridos">Todos los campos son requeridos para realizar el calculo</string>
+    <string name="entendido">Entendido</string>
+    <string name="agregar">Agregar</string>
 </resources>

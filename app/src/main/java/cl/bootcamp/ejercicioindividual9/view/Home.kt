@@ -24,15 +24,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import cl.bootcamp.ejercicioindividual9.R
 import cl.bootcamp.ejercicioindividual9.component.AlertError
 import cl.bootcamp.ejercicioindividual9.component.Spacio
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
-fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
+fun Pantalla( viewModel: ImcViewModel, navController: NavController) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -41,7 +43,9 @@ fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
     ) {
         TextTitulo()
         Spacio()
-        MultiBtn()
+        MultiBtn{ sexoSeleccionado ->
+            viewModel.sexo.value = sexoSeleccionado
+        }
         Spacio()
         TexEdad(viewModel.edad.value) { viewModel.edad.value = it }
         Spacio()
@@ -50,7 +54,11 @@ fun Pantalla(modifier: Modifier = Modifier, viewModel: ImcViewModel) {
         TexAltura(viewModel.altura.value) { viewModel.altura.value = it }
         BtnCalcular {
             viewModel.result.value =
-                viewModel.Calculo((viewModel.peso.value), viewModel.altura.value).toString()
+                viewModel.Calculo(
+                    (viewModel.peso.value),
+                    viewModel.altura.value,
+                    viewModel.edad.value,
+                    viewModel.sexo.value).toString()
         }
         Spacio()
         TexResult(viewModel)
@@ -99,10 +107,9 @@ fun BtnCalcular(onClick: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MultiBtn() {
+fun MultiBtn(onSexoChange: (String) -> Unit) {
     val sexo = remember { mutableStateListOf<Int>() }
-    val sexoOptions =
-        listOf(stringResource(id = R.string.sexo), stringResource(id = R.string.sexo2))
+    val sexoOptions = listOf(stringResource(id = R.string.sexo), stringResource(id = R.string.sexo2))
 
     MultiChoiceSegmentedButtonRow {
         sexoOptions.forEachIndexed { posicion, label ->
@@ -114,12 +121,15 @@ fun MultiBtn() {
                 onCheckedChange = {
                     if (sexo.isEmpty()) {
                         sexo.add(posicion)
+                        onSexoChange(sexoOptions[posicion]) // Actualiza el ViewModel
                     } else {
                         if (posicion in sexo) {
                             sexo.remove(posicion)
+                            onSexoChange("") // Si se deselecciona, limpiamos el valor en el ViewModel
                         } else {
                             sexo.clear()
                             sexo.add(posicion)
+                            onSexoChange(sexoOptions[posicion]) // Actualiza el ViewModel
                         }
                     }
                 },
@@ -130,6 +140,7 @@ fun MultiBtn() {
         }
     }
 }
+
 
 
 @Composable
@@ -170,12 +181,11 @@ fun TexAltura(altura: String, onAlturaChange: (String) -> Unit) {
 @Composable
 fun TexResult(viewModel: ImcViewModel) {
     val hasCalculated = viewModel.hasCalculated.value
-
     if (hasCalculated) {
         AlertError(
-            "ERROR",
-            "Todos los campos son requeridos para realizar el calculo",
-            "Entendido",
+            stringResource(R.string.error),
+            stringResource(R.string.camposrequeridos),
+            stringResource(R.string.entendido),
             onConfirmClick = { viewModel.hasCalculated.value = false },
             onDismissClick = { viewModel.hasCalculated.value = false }
         )
@@ -191,6 +201,7 @@ fun TexResult(viewModel: ImcViewModel) {
         )
     }
 }
+
 
 
 
