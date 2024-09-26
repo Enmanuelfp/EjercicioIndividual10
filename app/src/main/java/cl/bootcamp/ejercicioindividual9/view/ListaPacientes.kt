@@ -39,7 +39,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cl.bootcamp.ejercicioindividual9.R
 import cl.bootcamp.ejercicioindividual9.component.Spacio
-import cl.bootcamp.ejercicioindividual9.model.Paciente
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
@@ -109,7 +108,7 @@ fun CardPaciente(
                     onClick = {
                         viewModel.nombre.value = paciente.nombre
                         viewModel.LimpiarCampos()
-                        navController.navigate("imcCalculator")
+                            navController.navigate("Home")
                     },
                     modifier = Modifier.align(Alignment.End),
                     colors = ButtonDefaults.buttonColors(

@@ -25,25 +25,38 @@ class ImcViewModel : ViewModel() {
     var hasCalculated = mutableStateOf(false)
 
     fun Calculo(peso: String, altura: String, edad: String, sexo: String): Float {
-        val pesoD = peso.toDoubleOrNull() ?: 0.0
-        val alturaD = altura.toDoubleOrNull() ?: 0.0
-        val edadD = edad.toIntOrNull() ?: 0
-        if (peso.isEmpty() || altura.isEmpty() || edad.isEmpty() || sexo.isEmpty()) {
+        // Reemplazamos las comas por puntos en caso de que haya separadores decimales incorrectos.
+        val pesoFormatted = peso.replace(",", ".")
+        val alturaFormatted = altura.replace(",", ".")
+
+        // Intentamos convertir los valores a numéricos.
+        val pesoD = pesoFormatted.toDoubleOrNull()
+        val alturaD = alturaFormatted.toDoubleOrNull()
+        val edadD = edad.toIntOrNull()
+
+        // Verificamos si alguno de los campos es nulo o no válido.
+        if (peso.isEmpty() || altura.isEmpty() || edad.isEmpty() || sexo.isEmpty() ||
+            pesoD == null || alturaD == null || edadD == null) {
             hasCalculated.value = true
             return 0.0f
         }
 
+        // Verificamos si los valores son menores o iguales a 0.
         if (pesoD <= 0 || alturaD <= 0 || edadD <= 0) {
             hasCalculated.value = true
             return 0.0f
         }
 
+        // Calculamos el IMC.
         val resultimc = (pesoD / (alturaD * alturaD) * 10000).toFloat()
+
+        // Actualizamos los resultados.
         _result.value = String.format("%.2f", resultimc)
         _estadoSalud.value = estadoSalud(resultimc)
-        return _result.value.toFloat()
 
+        return resultimc
     }
+
 
 
     //Aqui comienza la Tarea 13
