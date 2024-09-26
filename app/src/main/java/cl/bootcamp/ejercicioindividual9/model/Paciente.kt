@@ -6,5 +6,5 @@ data class Paciente(
     var sexo: String = "",
     var imc: String = "",
     var estadoSalud: String = "",
-    val imcCalculado: Boolean = false
+    var imcCalculado: Boolean = false
 )

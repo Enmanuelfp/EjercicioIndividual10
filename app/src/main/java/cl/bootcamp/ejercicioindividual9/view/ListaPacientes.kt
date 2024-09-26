@@ -39,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import cl.bootcamp.ejercicioindividual9.R
 import cl.bootcamp.ejercicioindividual9.component.Spacio
+import cl.bootcamp.ejercicioindividual9.model.Paciente
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
@@ -82,7 +83,7 @@ fun TopBarListaPacientes() {
 @Composable
 fun CardPaciente(
     navController: NavController,
-    paciente: ImcViewModel.Paciente,
+    paciente: Paciente,
     viewModel: ImcViewModel
 ) {
     Card(

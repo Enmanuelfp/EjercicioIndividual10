@@ -3,9 +3,10 @@ package cl.bootcamp.ejercicioindividual9.viewModel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import cl.bootcamp.ejercicioindividual9.model.Paciente // Importamos Paciente desde el modelo
 
 class ImcViewModel : ViewModel() {
-    //Aqui comienza la actividad 10
+    // Estados para gestionar los campos de entrada del formulario
     private var _nombre = mutableStateOf("")
     private var _peso = mutableStateOf("")
     private var _altura = mutableStateOf("")
@@ -24,74 +25,51 @@ class ImcViewModel : ViewModel() {
 
     var hasCalculated = mutableStateOf(false)
 
+    // Función para calcular el IMC
     fun Calculo(peso: String, altura: String, edad: String, sexo: String): Float {
-        // Reemplazamos las comas por puntos en caso de que haya separadores decimales incorrectos.
+        // Reemplazamos comas por puntos para manejar separadores decimales incorrectos
         val pesoFormatted = peso.replace(",", ".")
         val alturaFormatted = altura.replace(",", ".")
 
-        // Intentamos convertir los valores a numéricos.
+        // Convertimos las entradas a valores numéricos
         val pesoD = pesoFormatted.toDoubleOrNull()
         val alturaD = alturaFormatted.toDoubleOrNull()
         val edadD = edad.toIntOrNull()
 
-        // Verificamos si alguno de los campos es nulo o no válido.
+        // Verificamos si alguno de los campos es nulo o no válido
         if (peso.isEmpty() || altura.isEmpty() || edad.isEmpty() || sexo.isEmpty() ||
             pesoD == null || alturaD == null || edadD == null) {
             hasCalculated.value = true
             return 0.0f
         }
 
-        // Verificamos si los valores son menores o iguales a 0.
+        // Verificamos si los valores son menores o iguales a 0
         if (pesoD <= 0 || alturaD <= 0 || edadD <= 0) {
             hasCalculated.value = true
             return 0.0f
         }
 
-        // Calculamos el IMC.
+        // Calculamos el IMC
         val resultimc = (pesoD / (alturaD * alturaD) * 10000).toFloat()
 
-        // Actualizamos los resultados.
+        // Actualizamos los resultados
         _result.value = String.format("%.2f", resultimc)
         _estadoSalud.value = estadoSalud(resultimc)
 
         return resultimc
     }
 
-
-
-    //Aqui comienza la Tarea 13
+    // Lista de pacientes (mutable, pero se expone como inmutable)
     private var _pacientes = mutableListOf<Paciente>()
     var pacientes: List<Paciente> = _pacientes
 
-    fun AgregarPaciente(
-        nombre: String
-    ) {
+    // Función para agregar un nuevo paciente
+    fun AgregarPaciente(nombre: String) {
         val nuevoPaciente = Paciente(nombre)
         _pacientes.add(nuevoPaciente)
     }
 
-    data class Paciente(
-        val nombre: String,
-        var edad: String = "",
-        var sexo: String = "",
-        var imc: String = "",
-        var estadoSalud: String = "",
-        var imcCalculado: Boolean = false
-    )
-
-    //Aqui comienza la tarea 14
-
-    fun estadoSalud(resultimc: Float): String {
-        return when {
-            resultimc < 18.5 -> "Bajo peso"
-            resultimc in 18.5..24.9 -> "Peso normal"
-            resultimc in 25.0..29.9 -> "Sobrepeso"
-            resultimc in 30.0..34.9 -> "Obesidad I"
-            resultimc in 35.0..39.9 -> "Obesidad II"
-            else -> "Obesidad III"
-        }
-    }
-
+    // Función para actualizar un paciente con datos de IMC
     fun ActualizarPaciente(
         nombre: String,
         edad: String,
@@ -109,6 +87,19 @@ class ImcViewModel : ViewModel() {
         }
     }
 
+    // Función para determinar el estado de salud en base al IMC
+    fun estadoSalud(resultimc: Float): String {
+        return when {
+            resultimc < 18.5 -> "Bajo peso"
+            resultimc in 18.5..24.9 -> "Peso normal"
+            resultimc in 25.0..29.9 -> "Sobrepeso"
+            resultimc in 30.0..34.9 -> "Obesidad I"
+            resultimc in 35.0..39.9 -> "Obesidad II"
+            else -> "Obesidad III"
+        }
+    }
+
+    // Función para limpiar los campos del formulario
     fun LimpiarCampos() {
         peso.value = ""
         altura.value = ""
@@ -117,9 +108,5 @@ class ImcViewModel : ViewModel() {
         result.value = ""
         estadoSalud.value = ""
     }
-
-
-//Profesor mi ViewModel esta desordenado pero funciona, le dejo un saludo desde estas lineas, fue dificil hacer funcionar
-    //la app hasta este punto pero se pudo.
-
 }
+
