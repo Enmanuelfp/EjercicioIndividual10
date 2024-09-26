@@ -34,7 +34,7 @@ import cl.bootcamp.ejercicioindividual9.component.Spacio
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
-fun Pantalla( viewModel: ImcViewModel, navController: NavController) {
+fun Pantalla(viewModel: ImcViewModel, navController: NavController) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -43,7 +43,7 @@ fun Pantalla( viewModel: ImcViewModel, navController: NavController) {
     ) {
         TextTitulo()
         Spacio()
-        MultiBtn{ sexoSeleccionado ->
+        MultiBtn { sexoSeleccionado ->
             viewModel.sexo.value = sexoSeleccionado
         }
         Spacio()
@@ -58,10 +58,11 @@ fun Pantalla( viewModel: ImcViewModel, navController: NavController) {
                     (viewModel.peso.value),
                     viewModel.altura.value,
                     viewModel.edad.value,
-                    viewModel.sexo.value).toString()
+                    viewModel.sexo.value
+                ).toString()
         }
         Spacio()
-        TexResult(viewModel)
+        TexResult(viewModel, navController)
     }
 }
 
@@ -109,7 +110,8 @@ fun BtnCalcular(onClick: () -> Unit) {
 @Composable
 fun MultiBtn(onSexoChange: (String) -> Unit) {
     val sexo = remember { mutableStateListOf<Int>() }
-    val sexoOptions = listOf(stringResource(id = R.string.sexo), stringResource(id = R.string.sexo2))
+    val sexoOptions =
+        listOf(stringResource(id = R.string.sexo), stringResource(id = R.string.sexo2))
 
     MultiChoiceSegmentedButtonRow {
         sexoOptions.forEachIndexed { posicion, label ->
@@ -140,7 +142,6 @@ fun MultiBtn(onSexoChange: (String) -> Unit) {
         }
     }
 }
-
 
 
 @Composable
@@ -179,7 +180,7 @@ fun TexAltura(altura: String, onAlturaChange: (String) -> Unit) {
 
 
 @Composable
-fun TexResult(viewModel: ImcViewModel) {
+fun TexResult(viewModel: ImcViewModel, navController: NavController) {
     val hasCalculated = viewModel.hasCalculated.value
     if (hasCalculated) {
         AlertError(
@@ -192,13 +193,38 @@ fun TexResult(viewModel: ImcViewModel) {
     } else {
         Text(
             text = viewModel.result.value,
-            fontSize = 40.sp,
+            fontSize = 30.sp,
             fontWeight = FontWeight.ExtraBold,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(20.dp),
             textAlign = TextAlign.Center
         )
+
+        Text(
+            text = viewModel.estadoSalud.value,
+            fontSize = 35.sp,
+            fontWeight = FontWeight.ExtraBold,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp),
+            textAlign = TextAlign.Center
+        )
+        if (viewModel.result.value.isNotEmpty() && viewModel.result.value != "0.0") {
+            Button(onClick = {
+
+                viewModel.ActualizarPaciente(
+                    nombre = viewModel.nombre.value,
+                    edad = viewModel.edad.value,
+                    sexo = viewModel.sexo.value,
+                    imc = viewModel.result.value,
+                    estadoSalud = viewModel.estadoSalud.value
+                )
+                navController.navigate("listaPacientes")
+            }) {
+                Text(text = stringResource(R.string.guardar))
+            }
+        }
     }
 }
 

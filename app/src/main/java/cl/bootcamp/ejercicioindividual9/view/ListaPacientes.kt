@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -41,19 +43,22 @@ import cl.bootcamp.ejercicioindividual9.model.Paciente
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
-fun PantallaListaPacientes(navController: NavController,viewModel: ImcViewModel) {
+fun PantallaListaPacientes(navController: NavController, viewModel: ImcViewModel) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
     ) {
         TopBarListaPacientes()
         if (viewModel.pacientes.isNotEmpty()) {
-            viewModel.pacientes.forEach { paciente ->
-                CardPaciente(navController,paciente)
+            LazyColumn {
+                items(viewModel.pacientes) { paciente ->
+                    CardPaciente(navController, paciente, viewModel)
+                }
             }
         }
-        BtnAgregar (navController,viewModel)
+
     }
+    BtnAgregar(navController, viewModel)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -76,7 +81,11 @@ fun TopBarListaPacientes() {
 
 
 @Composable
-fun CardPaciente(navController: NavController,paciente: ImcViewModel.Paciente) {
+fun CardPaciente(
+    navController: NavController,
+    paciente: ImcViewModel.Paciente,
+    viewModel: ImcViewModel
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -89,23 +98,56 @@ fun CardPaciente(navController: NavController,paciente: ImcViewModel.Paciente) {
                 .fillMaxWidth()
         )
         {
-            Text(
-                text = paciente.nombre,
-                style = MaterialTheme.typography.bodyLarge,
-                textAlign = TextAlign.Center
-            )
-            Spacio()
-            Button(
-                onClick = { navController.navigate("imcCalculator")  },
-                modifier = Modifier.align(Alignment.End),
-                colors = ButtonDefaults.buttonColors(
-                    contentColor = Color.White,
-                    containerColor = Color.Black
+            if (!paciente.imcCalculado) {
+                Text(
+                    text = paciente.nombre,
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Center
                 )
-            )
-            {
-                Text(stringResource(R.string.calcularimc))
+                Spacio()
+                Button(
+                    onClick = {
+                        viewModel.nombre.value = paciente.nombre
+                        viewModel.LimpiarCampos()
+                        navController.navigate("imcCalculator")
+                    },
+                    modifier = Modifier.align(Alignment.End),
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color.White,
+                        containerColor = Color.Black
+                    )
+                )
+                {
+                    Text(stringResource(R.string.calcularimc))
+                }
+            } else {
+                Text(
+                    text = "Nombre: ${paciente.nombre}",
+                    style = MaterialTheme.typography.bodyLarge,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "Edad: ${paciente.edad}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "Sexo: ${paciente.sexo}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "IMC: ${paciente.imc}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Start
+                )
+                Text(
+                    text = "Estado de Salud: ${paciente.estadoSalud}",
+                    style = MaterialTheme.typography.bodyMedium,
+                    textAlign = TextAlign.Start
+                )
             }
+
 
         }
     }
@@ -113,7 +155,7 @@ fun CardPaciente(navController: NavController,paciente: ImcViewModel.Paciente) {
 
 
 @Composable
-fun BtnAgregar(navController: NavController,viewModel: ImcViewModel) {
+fun BtnAgregar(navController: NavController, viewModel: ImcViewModel) {
     var showModal by remember { mutableStateOf(false) }
 
     Box(
@@ -137,7 +179,7 @@ fun BtnAgregar(navController: NavController,viewModel: ImcViewModel) {
             ModalAgregarPaciente(
                 onDismiss = { showModal = false },
                 onConfirm = { nombrePaciente ->
-                    viewModel.agregarPaciente(nombrePaciente)
+                    viewModel.AgregarPaciente(nombrePaciente)
                     showModal = false
                     navController.navigate("ListaPacientes")
                 }
@@ -149,7 +191,7 @@ fun BtnAgregar(navController: NavController,viewModel: ImcViewModel) {
 @Composable
 fun ModalAgregarPaciente(
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: (String) -> Unit,
 ) {
     var nombrePaciente by remember { mutableStateOf("") }
 
