@@ -1,6 +1,5 @@
-package cl.bootcamp.ejercicioindividual9.view
+package cl.bootcamp.ejercicioindividual9.view.onBoarding
 
-import ButtonFinish
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

@@ -1,4 +1,4 @@
-package cl.bootcamp.ejercicioindividual9.view
+package cl.bootcamp.ejercicioindividual9.view.onBoarding
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement

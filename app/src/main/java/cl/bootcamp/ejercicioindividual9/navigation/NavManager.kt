@@ -7,10 +7,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import cl.bootcamp.ejercicioindividual9.model.StoreBoarding
-import cl.bootcamp.ejercicioindividual9.view.MainOnBoarding
+import cl.bootcamp.ejercicioindividual9.view.onBoarding.MainOnBoarding
 import cl.bootcamp.ejercicioindividual9.view.Pantalla
 import cl.bootcamp.ejercicioindividual9.view.PantallaListaPacientes
-import cl.bootcamp.ejercicioindividual9.view.SplashScreen
+import cl.bootcamp.ejercicioindividual9.view.onBoarding.SplashScreen
 import cl.bootcamp.ejercicioindividual9.viewModel.ImcViewModel
 
 @Composable
