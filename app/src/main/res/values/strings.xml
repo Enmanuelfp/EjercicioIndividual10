@@ -18,4 +18,10 @@
     <string name="entendido">Entendido</string>
     <string name="agregar">Agregar</string>
     <string name="guardar">Guardar Imc</string>
+    <string name="saludo">¡Bienvenido!</string>
+    <string name="intermedio">Gestión rápida</string>
+    <string name="descipcionimc">Usa la app para calcular el IMC de tus pacientes fácilmente.</string>
+    <string name="descipcionintermedio">Agrega, edita y visualiza los datos de tus pacientes de forma sencilla.</string>
+    <string name="finalpantalla">¡Listo para empezar!</string>
+    <string name="finalpantalladescripcion">Comienza a gestionar pacientes y calcular su IMC ahora.</string>
 </resources>

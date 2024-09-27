@@ -51,6 +51,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.google.accompanist:accompanist-pager:0.15.0")
+    implementation("com.airbnb.android:lottie-compose:5.2.0")
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

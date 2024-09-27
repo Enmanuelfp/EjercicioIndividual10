@@ -3,7 +3,7 @@ package cl.bootcamp.ejercicioindividual9.viewModel
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import cl.bootcamp.ejercicioindividual9.model.Paciente // Importamos Paciente desde el modelo
+import cl.bootcamp.ejercicioindividual9.model.Paciente
 
 class ImcViewModel : ViewModel() {
     // Estados para gestionar los campos de entrada del formulario
@@ -24,6 +24,7 @@ class ImcViewModel : ViewModel() {
     var estadoSalud: MutableState<String> = _estadoSalud
 
     var hasCalculated = mutableStateOf(false)
+
 
     // Función para calcular el IMC
     fun Calculo(peso: String, altura: String, edad: String, sexo: String): Float {
@@ -52,12 +53,17 @@ class ImcViewModel : ViewModel() {
         // Calculamos el IMC
         val resultimc = (pesoD / (alturaD * alturaD) * 10000).toFloat()
 
-        // Actualizamos los resultados
-        _result.value = String.format("%.2f", resultimc)
+        // Formateamos el resultado a 2 decimales
+        val formattedResult = String.format("%.2f", resultimc)
+
+        // Actualizamos los resultados en _result con el valor formateado
+        _result.value = formattedResult
         _estadoSalud.value = estadoSalud(resultimc)
 
-        return resultimc
+        // Retornamos el valor como float después de ser formateado
+        return formattedResult.toFloat()
     }
+
 
     // Lista de pacientes (mutable, pero se expone como inmutable)
     private var _pacientes = mutableListOf<Paciente>()
